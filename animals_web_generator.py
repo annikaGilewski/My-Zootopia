@@ -10,21 +10,6 @@ def load_data(file_path):
 animals_data = load_data("animals_data.json")
 
 
-for animal in animals_data:
-    print(f"Name: {animal['name']}")
-
-    if "diet" in animal["characteristics"]:
-        print(f"Diet: {animal['characteristics']['diet']}")
-
-    if "locations" in animal and animal["locations"]:
-        print(f"Location: {animal['locations'][0]}")
-
-    if "type" in animal["characteristics"]:
-        print(f"Type: {animal['characteristics']['type']}")
-
-    print()
-
-
 def load_html(html_file):
     with open(html_file, "r", encoding="utf-8") as handle:
         return handle.read()
@@ -32,23 +17,37 @@ def load_html(html_file):
 
 html_template = load_html("animals_template.html")
 
+def serialize_animal(animal_obj):
+    output = ""
+
+    output += '<li class="cards__item">'
+
+    output += f"""
+    <div class="card__title">{animal_obj['name']}</div>
+    <p class="card__text">
+    """
+
+    if "diet" in animal_obj["characteristics"]:
+        output += f"<strong>Diet:</strong> {animal_obj['characteristics']['diet']}<br/>\n"
+
+    if "locations" in animal_obj and animal_obj["locations"]:
+        output += f"<strong>Location:</strong> {animal_obj['locations'][0]}<br/>\n"
+
+    if "type" in animal_obj["characteristics"]:
+        output += f"<strong>Type:</strong> {animal_obj['characteristics']['type']}<br/>\n"
+
+    output += """
+    </p>
+    </li>
+    """
+
+    return output
+
+
 animals_info = ""
 
 for animal in animals_data:
-    animals_info += '<li class="cards__item">'
-
-    animals_info += f"Name: {animal['name']}<br/>\n"
-
-    if "diet" in animal["characteristics"]:
-        animals_info += f"Diet: {animal['characteristics']['diet']}<br/>\n"
-
-    if "locations" in animal and animal["locations"]:
-        animals_info += f"Location: {animal['locations'][0]}<br/>\n"
-
-    if "type" in animal["characteristics"]:
-        animals_info += f"Type: {animal['characteristics']['type']}<br/>\n"
-
-    animals_info += "</li>"
+    animals_info += serialize_animal(animal)
 
 
 html = html_template.replace(
